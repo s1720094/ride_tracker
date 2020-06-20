@@ -4,6 +4,7 @@ public class Ride {
 
 	private String name;
 	private int duration;
+	private Integer id;
 
 	public int getDuration() {
 		return duration;
@@ -19,6 +20,14 @@ public class Ride {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 }

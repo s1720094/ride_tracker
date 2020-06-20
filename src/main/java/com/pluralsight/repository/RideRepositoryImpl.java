@@ -18,72 +18,72 @@ public class RideRepositoryImpl implements RideRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Ride createRide(Ride ride) {
 		//jdbcTemplate.update("insert into ride (name, duration) values (?,?)", ride.getName(), ride.getDuration());
-		
+
 		//Both Prepared statements first one uses anonymous inner class
 //		KeyHolder keyHolder = new GeneratedKeyHolder();
 //		jdbcTemplate.update(new PreparedStatementCreator() {
-//			
+//
 //			@Override
 //			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-//				
+//
 //				PreparedStatement ps = con.prepareStatement("insert into ride (name, duration) values (?,?)", new String [] {"id"});
 //				ps.setString(1, ride.getName());
 //				ps.setInt(2,  ride.getDuration());
 //				return ps;
 //			}
 //		}, keyHolder);
-//		
+//
 //		Number id = keyHolder.getKey();
-		
+
 		SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
-		
+
 		insert.setGeneratedKeyName("id");
-		
+
 		Map<String, Object> data = new HashMap<>();
 		data.put("name", ride.getName());
 		data.put("duration", ride.getDuration());
-		
+
 		List<String> columns = new ArrayList<>();
 		columns.add("name");
 		columns.add("duration");
-		
+
 		insert.setTableName("ride");
 		insert.setColumnNames(columns);
-				
+
 		Number id = insert.executeAndReturnKey(data);
-		
+
 		return getRide(id.intValue());
 	}
-	
+
 	@Override
 	public Ride getRide(Integer id) {
 		Ride ride = jdbcTemplate.queryForObject("select * from ride where id = ?", new RideRowMapper(), id);
-		
+
 		return ride;
 	}
-	
+
 	@Override
 	public List<Ride> getRides() {
-		
+
 		List<Ride> rides = jdbcTemplate.query("select * from ride", new RideRowMapper());
-		
+
 		return rides;
 	}
-	
+
 	@Override
 	public Ride updateRide(Ride ride) {
-		jdbcTemplate.update("update ride set name = ?, duration = ? where id = ?", 
+		jdbcTemplate.update("update ride set name = ?, duration = ? where id = ?",
 				ride.getName(), ride.getDuration(), ride.getId());
 		return ride;
 	}
-	
+
 	@Override
 	public void updateRides(List<Object[]> pairs) {
 		jdbcTemplate.batchUpdate("update ride set ride_date = ? where id = ?", pairs);
 	}
-	
+
 }
