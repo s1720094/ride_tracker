@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.pluralsight.model.Ride;
 
+//git test
+
 public class RideRowMapper implements RowMapper<Ride> {
 	
 	@Override
